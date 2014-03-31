@@ -1,4 +1,6 @@
 <?php
+namespace Light\Util;
+
 /**
  * A tree for storing objects associated with a name in some namespace.
  * 
@@ -19,7 +21,7 @@
  *
  */
 
-class Util_NameHierarchy {
+class NameHierarchy {
 
     /**
      * @var string

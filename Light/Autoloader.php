@@ -31,24 +31,20 @@ class Autoloader
 		}
 		else
 		{
-			@include_once($class);
+			$name = self::createDirectoryPath($class);
+			@include_once($name);
 		}
 	}
 	
 	/**
-	 * Finds the given resource.
+	 * Finds the location of the given resource.
 	 * @param	string	$name	E.g. <kbd>Light\Util\Locale\String</kbd>
 	 * @param	string	$ext	E.g. <kbd>php</kbd>
 	 * @return	string	Full path to the file, if found; otherwise, NULL.
 	 */
 	public static function find($name, $ext = "php", $separator="_")
 	{
-		$file = strtr($name,$separator . "\\",DIRECTORY_SEPARATOR.DIRECTORY_SEPARATOR) . "." . $ext;
-		
-		if ($file[0] == DIRECTORY_SEPARATOR)
-		{
-			$file = substr($file, 1);
-		}
+		$file = self::createDirectoryPath($name, $ext, $separator);
 		
 		$debugLog = "";
 		
@@ -73,6 +69,29 @@ class Autoloader
 		}
 		
 		return NULL;
+	}
+	
+	/**
+	 * Creates a directory path from a resource specification.
+	 * @param	string	$name	E.g. <kbd>Light\Util\Locale\String</kbd>
+	 * @param	string	$ext	E.g. <kbd>php</kbd>
+	 * @return	string	A relative directory-path corresponding to the resource.
+	 */
+	private static function createDirectoryPath($name, $ext = "php", $separator="_")
+	{
+		$file = strtr($name, $separator . "\\",DIRECTORY_SEPARATOR.DIRECTORY_SEPARATOR) . "." . $ext;
+		
+		if ($file[0] == DIRECTORY_SEPARATOR)
+		{
+			$file = substr($file, 1);
+		}
+
+		return $file;
+	}
+	
+	private static function findDirectoryPath($path)
+	{
+		
 	}
 
 	/**

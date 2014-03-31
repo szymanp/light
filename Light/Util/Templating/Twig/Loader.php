@@ -6,6 +6,8 @@ use Light\Autoloader;
 use Light\Exception\Exception;
 use \Twig_LoaderInterface;
 
+require_once "Twig\LoaderInterface.php";
+
 class Loader implements Twig_LoaderInterface
 {
 	const EXTENSION = ".twig.html";

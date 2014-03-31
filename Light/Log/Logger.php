@@ -10,6 +10,8 @@
 
 namespace Light\Log;
 
+use Light\Util\NameHierarchy;
+
 class Logger {
     
     const EMERG     = 0;     /** System is unusable */
@@ -24,7 +26,7 @@ class Logger {
 
     /**
      * Hierarchical structure of loggers.
-     * @var Util_NameHierarchy
+     * @var NameHierarchy
      */
     private static $loggers;
 
@@ -37,7 +39,7 @@ class Logger {
     public static function getLogger( $name = "" ) {
 
         if (is_null( self::$loggers )) {
-            self::$loggers = new \Util_NameHierarchy();
+            self::$loggers = new NameHierarchy();
             self::$loggers->put( "", new self("") );
         }
         

@@ -6,6 +6,8 @@ use \Twig_Environment;
 use \Twig_Loader_Filesystem;
 use \Twig_Loader_String;
 
+require_once "Twig\Environment.php";
+
 class Twig implements TemplateEngine
 {
 	private $template;
