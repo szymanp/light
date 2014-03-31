@@ -1,0 +1,15 @@
+<?php
+use Light\UI\Util\TagBuilder;
+
+$tag = new TagBuilder("INPUT", $this);
+$tag->property("Name",	"name");
+$tag->property("Id",	"id");
+$tag->property("Type",	"type");
+$tag->property("Value",	"value");
+
+if ($this->Readonly)
+{
+	$tag->attribute("readonly", "readonly");
+}
+
+$tag->printOpeningTag(true);

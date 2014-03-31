@@ -1,0 +1,35 @@
+<html>
+<?php 
+	$aps	= Light\UI\ViewContext::getInstance()->getAttachmentPoints();
+?>
+<head>
+	<meta http-equiv="Content-type" content="text/html; charset=utf-8" />
+<?php print $aps->getHtml("head"); ?>
+</head>
+
+<body>
+<?php 
+	print	$html;
+	
+	if (!empty($this->exceptions))
+	{
+		?>
+		<div class='exceptions'>
+		<?php
+
+		foreach($this->exceptions as $e)
+		{
+			?><pre><?php
+			print $e->getMessage() . "\n";
+			print $e->getTraceAsString();
+			?></pre><?php
+		}
+		
+		?>
+		</div>
+		<?php
+	}
+?>
+</body>
+
+</html>

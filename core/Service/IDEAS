@@ -1,0 +1,61 @@
+
+1)
+Services will be invoked through a different URL than normal Components.
+E.g.
+
+http://mysite/Users				- list of users HTML page "Users"
+http://mysite/Users/get			- "get" method of "Users" service component
+http://mysite/svc/Users/get		- "get" method of "Users" service component
+
+1.1)
+The controller, as with normal Pages, will know how to construct service URLs.
+
+1.2)
+Parameters could be passed to a method invocation and to a whole service as well.
+In this way, if several methods of the service share the same parameters (e.g. username and password),
+these can be factored out as service parameters.
+
+2)
+A service can return output in many different forms.
+Each invocation will have a "default" form, which could be overridden by some parameter.
+Possible forms:
+- HTML			(raw html output)
+- JSON-raw		(raw JSON)
+- JSON-standard	(some standardized version, e.g. with error control information, etc.)
+- maybe some XML versions as well?
+
+3)
+We could have two types of services.
+- method service - a simple service where a single method is invoked, e.g.
+	/mysite/svc/Users/get?id=1	- invokes method "get" with some parameters
+- resource service - a service where a resource is accessed, e.g.
+	GET /mysite/svc/Users		- list users
+	GET	/mysite/svc/Users/1		- get user with id=1
+	POST /mysite/svc/Users/1	- update user with id=1
+	PUT /mysite/svc/Users		- create a new user
+
+4)
+A service can invoke a special view do in-memory render a Page and return its HTML.
+This means that the service itself does not need to be a Component.
+The good thing about being a component is:
+- it has a lifecycle, meaning some initialization can occur before method invocation
+- a lot of code is probably shared between a component and some service, so it makes
+  sense for it to actually be the same class
+
+5)
+Maybe the two types of services and integration to a component could be achieved through
+a ServiceDescriptor class.
+
+A ServiceDescriptor would hold information about published methods and resources.
+
+A Service would have to provide a getServiceDescriptor() method to let the service runner
+know how to handle requests.
+
+Component would have a getServiceDescriptor() method and some methods for simplifying 
+work with a ServiceDescriptor, but it would not, by default, implement a Service interface.
+The user would have to add this interface explictly.
+
+6)
+The service runner could also provide some special handling for a Component. I.e. it could
+initialize its lifecycle in a way similar to a view and so on. Simple services (i.e. non-
+Component-based) would not have this. They would be dumb and stateless.

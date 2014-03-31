@@ -1,0 +1,48 @@
+<table id='<?=$this->getId()?>' name='<?=$this->getName()?>'<?php if (isset($this->Description)): ?>
+ summary='<?=$this->sanitizeHtml($this->Description)?>'<?php endif ?><?=$this->getAttributeStr()?>>
+<?php if ($this->hasProperty("Label")): ?>
+<caption><?=$this->propertyGet("Label")?></caption>
+<?php endif ?>
+<tr>
+<?php
+	foreach($this->getColumns() as $i => $column) {
+		$onclick = "Light.Table.columnClick(this,$i);";
+		print( "<th onClick='$onclick'>" . $column->getLabel() . "</th>" );
+	}
+?>
+</tr>
+<?php
+	if ($this->hasRows()):
+		foreach($this->getRows() as $key => $row) {
+			$row = \Light\Data\Helper::wrap($row);
+			$attribs = $this->getRowAttributes()->getInstance($row,$key);
+			$html = "<tr" . $attribs . ">";
+			foreach($this->getColumns() as $colidx => $column) {
+				$onclick = $column->getHref($row, $key);
+				if (is_null($onclick))
+				{
+					$onclick = "Light.Table.click(this,\"" . $this->sanitizeHtml($key) . "\",$colidx);";
+				}
+				
+				$com = $column->getInstance($row,$key);
+				
+				$attribs = $column->getAttributes()->getInstance($row, $key);
+				
+				if (!is_null($com))
+				{
+					$html .= "<td" . $attribs . ">" . $com . "</td>";
+				} 
+				else 
+				{
+					$value = $column->getValue($row);
+					$attribs->set("onClick",$onclick);
+					$html .= "<td" . $attribs . ">" . $value . "</td>";
+				}
+			}
+			$html .= "</tr>\n";
+			print( $html );
+		}
+	endif;
+?>
+</table>
+

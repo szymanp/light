@@ -1,0 +1,29 @@
+<div name="<?=$this->getName()?>"<?=$this->getAttributeStr()?>>
+<?php
+	$active = $this->getActiveComponent();
+	
+	foreach($this->tabs as $i => $element) {
+	
+		$isActive	= ($active === $element);
+	
+		print("<div name=\"" . $element->getLocalName() . "\"" . ($isActive?" class='active'>":">"));
+
+		$href = $this->getHref()->evaluate($i);
+		$href->printLink($element->Label);
+		
+		if ($isActive) {
+			print("<div>");
+			$element->render();
+			print("</div>");
+		}
+		else if ($this->IsAjax)
+		{
+			print("<div></div>");
+		}
+		
+		print("</div>");
+		
+		$i++;
+	}
+?>
+</div>

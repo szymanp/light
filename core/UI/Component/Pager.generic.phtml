@@ -1,0 +1,36 @@
+<div name='<?=$this->Name?>'<?=$this->AttributeStr?>>
+<?php		 
+
+	$i = 0;
+	
+	$showFirstItem = $showPrevItem = false;
+	
+	// display items
+	foreach( $this->pager as $page => $index ) {
+	
+		if (($i>0) or ($showFirstItem) or ($showPrevItem)) {
+			$this->getTemplate()->part("separator");
+		}
+
+		$onclick = 'Light.UI.invokeEvent(this.parentNode,"click",'.$page.',true);';
+		if ($this->pager->isPageCurrent($page)) {
+			print( ($page+1) );
+		} else {
+			print( "<a href='javascript:void(0);' onClick='$onclick'>" . ($page+1) . "</a>" );
+		}
+		
+/**		   
+		$lt->title	= (string) ($page+1);
+		$lt->page	= $page;
+		$lt->item	= $index;
+		// odd/even item information
+		$lt->index	= $i;
+		$lt->count	= count( $this->pager );
+		$this->setURL( $lt, $page, $index );
+		
+		$lt->render();
+*/			  
+		$i++;
+	}
+?>
+</div>

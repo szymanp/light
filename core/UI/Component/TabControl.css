@@ -1,0 +1,41 @@
+div.tabs {
+	min-height:		7em;
+	height:			100%;
+	position:		relative;
+	line-height:	1;
+	z-index:		0;
+	margin-top:		0.5em;
+}
+div.tabs > div {
+	display: 		inline;
+}
+div.tabs > div > a {
+/*	background: 	#ccc; */
+	padding: 		0.2em;
+	border:			0.1em outset #000;
+	border-bottom:	0.1em solid white;
+}
+div.tabs > div:not(.active) > a {
+	border-bottom:	none;
+	background:		#ddd;
+}
+div.tabs > div > div {
+/*	background:		#ccc; */
+	left:			0;
+	z-index:		-2;
+	top:			1.3em;
+	bottom: 		0;
+	right: 			0;
+	overflow: 		auto;
+	padding:		0.3em;
+	border: 		0.1em outset #000;
+}
+div.tabs > div:not(.active) > div {
+	position:		absolute;
+	visibility: 	hidden;
+}	
+div.tabs > div.active > div {
+	position:		absolute;
+	visibility:		visible;
+	z-index:		-1;
+}

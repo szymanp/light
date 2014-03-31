@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<resources>
+	<resource name="autocomplete-js" processor="StrRepl">
+	<![CDATA[
+$("#{ID}").autocomplete(
+		{
+			source: "{SOURCE}",
+			minLength: 2,
+			select: function(event, ui)
+			{
+				
+			}
+		});
+	]]>
+	</resource>
+</resources>

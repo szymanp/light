@@ -1,0 +1,45 @@
+Component:
+
+	- lifecycle
+		- serialization
+	- events
+	- properties
+	- databinding
+	
+	
+					Template	Component		View		Scene
+lifecycle				-			+			-			-
+event handling			-			+			-			-
+event sending			-			+			-			-
+properties				+			+			-			-
+renderable				+			+			+			-
+has children			-			+			-			-
+databinding				-			+			-			-
+de/serializing			-			-			+			-
+
+Template:
+	An object that is only capable of displaying output.
+	A template is composed of 
+	
+	Component::render() {
+		$this->getTemplate()->render();
+	}
+	
+	Template::render()
+
+Component:
+	A Component is an object that can interact with the user.
+	It can display output and accept user input via events.
+	It can be composed of other Components.
+
+View:
+	An object that facilitates interaction with the user for a single Component.
+	A View processes the input received from the user and transforms
+	it into events for the Component.
+	A View is also responsible for saving the state of a Component.
+	
+Scene:
+	Scene is an object that coordinates the work of all Views.
+	There is just one Scene object per user request.
+	It manages the shared resources for the request, such as stylesheets and JS files.
+

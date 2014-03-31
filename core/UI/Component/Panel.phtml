@@ -1,0 +1,18 @@
+<?php
+
+$first = true;
+
+$this->renderPart("elements:before");
+	
+foreach($this->elements as $el) {
+		
+	if (!$first) {
+		$this->renderPart("elements:separator");
+	} else {
+		$first = false;
+	}
+		
+	$el->render();
+}
+
+$this->renderPart("elements:after");

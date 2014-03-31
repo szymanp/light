@@ -1,0 +1,211 @@
+
+SUMMARY
+=======
+
+	(to be written, use the summary in MODEL)
+
+TEMPLATEs and TEMPLATEPROVIDERs (name may change)
+===============================
+
+	REQUIREMENTS BY EXAMPLE:
+	
+	- Usage in Component\List:
+	
+		== Code ==
+		
+		+-- list definition --+
+		// $c is a Component\List
+		// $c->getItemTemplate() is a DataTemplateProvider
+		$c->getItemTemplate()->setTemplate("My_Template_Class");
+		
+		+-- activation by List --+
+		$c->getItemTemplate()->getTemplateInstance($row,$key);
+		
+		== Explanation ==
+		
+		A List needs a replacable component that will render every item of the list.
+		It should be possible to encapsulate this replaceable component into a class,
+		so it could be reused (e.g. a standard numbered OL or bulleted UL list).
+		Each instance of this component must know the element it is rendering ($row) and
+		its index in the list ($key).
+
+	- Usage in Component\Table for columns and rows:
+	
+		Typically in a table, columns are static (defined by the programmer), while the
+		rows are dynamic (created at runtime from data). However, this does not have to
+		be always the case. Both could be created statically or dynamically.
+		
+		If a column/row is defined statically, then it is most useful for it to be a Component
+		and the programmer would add a new instance of this component to the Table.
+		In this way, it is easy to set properties on the column/row:
+		
+		$table->Columns->add(object(new Column("Item Number")
+			->setAttribute("width", "25%")));
+			
+		If a column/row is created dynamically, then it is most useful to specify a codeblock
+		that would be responsible for generating row instances based on the data.
+		
+		
+		
+		OBSERVATIONS:
+		- Who should be responsible for generating cell instances - rows or columns? Or maybe
+		  some other entity? Like a CellTemplate on the table?
+		- It is useful to have a DataColumn class, that can generate rows and columns with data
+		  from a tablefield.
+		- In order to change the layout of a Column, it is enough (as with any Renderable), to
+		  change the Template of that component.
+		  (Note that changing this via ComponentCollection as a factory is problematic - the change
+		  is not done directly on a Column, but on a Column's Template object)
+		- ComponentCollection can be used as a factory for creating components that have the same properties:
+		
+			$colFactory = new ComponentCollection("Column");
+		  	$colFactory->getStyle()->setAttribute("width", "25%");
+			
+			$column = $colFactory->getNext();
+			
+		DESIGN IDEA 1:
+		
+		- $table->Columns, $table->Rows -> ComponentCollection
+		- ComponentCollection is a normal collection but it also has a _generator_ OR _transformer_
+		- A generator is an object/function/method/closure that can create new instances of collection components
+		- A transformer is an object/function/method/closure that takes an existing component instance and applies
+		  some changes to it; as opposed to a generator, it does not create a new component.
+		- ComponentCollection is not a Container. It is a proxy between the owning Component and the instance Component
+		
+		- Classes involved:
+			- ComponentCollection : object
+			  - BaseClassName	: string	- Can only be set at construct time. The base class of the component.
+			  - ClassName		: string	- The class instantiated by the collection
+			  + Style			: Style		- Style applied to instantiated components
+			  + clearTransformers()			- Removes all transformers.
+			- Column : Axis
+			- Row : Axis
+			- Axis{abstract} : ContentControl
+			  Axis represents a Row or a Column. It renders as a row/column header.
+			  + Label			: string	- Used for displaying the row/column header caption.
+			  + Binding			: Binding	- Databinding that may be used by Cells to display their content
+			- Cell : ContentControl
+		
+		EXAMPLE:
+		
+			$table->Rows->add(new Row("titleRow", "Title"));
+			$table->Rows->add(new Row("priceRow", "Price [USD]"));
+			$table->Rows->add(new Row("amountRow","Amount in stock"));
+			
+			$table->Columns->setClass("Light\UI\Component\Table\Column");
+			// A call to transformer() adds _another_ transformer. There can be many.
+			$table->Columns->transformer(function($table, $column, $coord, $data)
+				{
+					$column->width = "100px";
+					if ($coord->Key % 2) $column->style = "background-color: #c0c0c0";
+				});
+			
+			$table->Cells->transformer(function($table, $cell, $coord, $data)
+				{
+					if ($coord->Row->Name == "amountRow" && $data < 10)
+					{
+						$cell->style = "background-color: red";
+					}
+					
+					if ($coord->Row->Name == "priceRow")
+					{
+						$cell->Content = "$" . $data;
+					}
+					else
+					{
+						$cell->Content = $data;
+					}
+				});
+				
+		Q: How should the Collection's elements be index? Continuous natural numbers? String/integer identifiers?
+		A: String/integer identifiers matching the component's name.
+		
+		Q: Should the Collection hold a reference to the datasource used for supplying to generated elements,
+		   or should the caller provide a collection/single element with each call?
+		A: 1) Holding a reference may cause problems if the owner's datacontext changes, etc.
+		   2) However, holding a reference simplifies access to the Collection - it can implement Iterator, ArrayAccess, etc.
+		   
+		Q: How should classes use the Collection? They need one property for the Item Source and another for the Item elements.
+		   Can this be combined into one? What if an Item in the Source is also an element?
+		
+	- Usage in Component\Table\ActionColumn as a button:
+
+	
+		
+=============
+Usecases:
+
+1) Cell-Table: data supplied per cell (data[x] => cell)
+2) Row-Table: data supplied per row or column (data[x] => row => {cell})
+3) List: data supplied per item (data[x] => item)
+4) TabControl: data supplied per tab (data[x] => tab_content) [NOTE: tab_title is taken from the tab_content component's title]
+5) Helper-Factory for user components.
+
+
+ad 3)
+
+	// List.php
+	class List
+	{
+		public function construct()
+		{
+			$this->items = new Collection($this);
+		}
+		
+		public function init()
+		
+		
+	}
+	
+	// List.phtml
+	
+ad 3a) Modified: Collection holds array property, is responsible for initialization
+
+	// List.php
+	class List
+	{
+		protected $items;
+		
+		public function construct()
+		{
+			$this->items = new Collection($this);
+			$this->addStateChangeListener($this->items);
+		}
+		public function hasElement($name)
+		{
+			if (parent::hasElement($name))
+			{
+				return true;
+			}
+			if ($this->items->loadElementByName($name))
+			{
+				return true;
+			}
+		}
+	}
+	// List.phtml
+	foreach($this->getItems() as $item)
+	{
+		print $item;
+	}
+	// LiseUseCasePage.php
+	class ListUseCasePage extends Page
+	{
+		public function init()
+		{
+			$this->add(new List("books"));
+			$this->books->getItems()->Source = object(new Data\ClosureCollection($this))
+				->setLoader(function($coll,$ctx)
+				{
+					// code for populating an array and passing to $coll->setCollection()
+				});
+		}
+	}
+	
+ad 1)
+	{$row,$col}
+	foreach($this->getCells()->getIteratorForDimension(0) as $col)
+	{
+		
+	}
+	
