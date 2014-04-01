@@ -3,7 +3,7 @@
  * Filter for logging messages.
  *
  * @package	log
- * @author	Piotr Szymaï¿½ski <szyman@magres.net>
+ * @author	Piotr Szymañski <szyman@magres.net>
  * @license	http://www.gnu.org/copyleft/gpl.html  GPL License, Version 2
  *
  */
