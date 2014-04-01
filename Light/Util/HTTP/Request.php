@@ -33,6 +33,13 @@ class Request
 	 * @var array
 	 */
 	protected $_POST;
+	
+	/**
+	 * PHP's $_GET data
+	 * 
+	 * @var array
+	 */
+	protected $_GET;
 
 	/**
 	 * The request body, if any.
@@ -55,13 +62,14 @@ class Request
 	/**
 	 * Sets up the object
 	 *
-	 * The serverData and postData array can be used to override usage of PHP's
-	 * global _SERVER and _POST variable respectively.
+	 * The serverData, postData and getData arrays can be used to override usage of PHP's
+	 * global _SERVER, _POST and _GET variables respectively.
 	 *
 	 * @param array $serverData        	
 	 * @param array $postData        	
+	 * @param array $getData
 	 */
-	public function __construct(array $serverData = null, array $postData = null)
+	public function __construct(array $serverData = null, array $postData = null, array $getData = null)
 	{
 		if ($serverData)
 		{
@@ -79,6 +87,15 @@ class Request
 		else
 		{
 			$this->_POST = & $_POST;
+		}
+		
+		if ($getData)
+		{
+			$this->_GET = $getData;
+		}
+		else
+		{
+			$this->_GET = & $_GET;
 		}
 	}
 
@@ -287,6 +304,26 @@ class Request
 	public function getPostVars()
 	{
 		return $this->_POST;
+	}
+	
+	/**
+	 * Returns PHP's _GET variable.
+	 * 
+	 * @return array
+	 */
+	public function getGetVars()
+	{
+		return $this->_GET;
+	}
+	
+	/**
+	 * Returns combined values from PHP's _POST and _GET variables.
+	 * 
+	 * @return array
+	 */
+	public function getRequestVars()
+	{
+		return array_merge($this->_POST, $this->_GET);
 	}
 
 	/**

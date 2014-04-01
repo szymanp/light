@@ -93,9 +93,10 @@ class URL
 	 * @param integer	$port
 	 * @param string	$path
 	 * @param string	$query
+	 * @param string	$reference
 	 * @return \Light\Util\URL
 	 */
-	 public static function fromParts($protocol, $host, $port, $path, $query = null)
+	 public static function fromParts($protocol, $host, $port, $path, $query = null, $reference = null, $user = null, $password = null)
 	 {
 	 	$self = new self;
 	 	$self->parsedForm = true;
@@ -104,6 +105,9 @@ class URL
 		$self->port		= $port;
 		$self->path		= $path;
 		$self->query	= $query;
+		$self->reference= $reference;
+		$self->user		= $user;
+		$self->password	= $password;
 		return $self;
 	}
 	
@@ -251,6 +255,15 @@ class URL
 		// The URLs differ too much.
 		
 		return $this;
+	}
+	
+	/**
+	 * Returns a URLBuilder for modifying a copy of this URL. 
+	 * @return \Light\Util\URLBuilder
+	 */
+	public final function modify()
+	{
+		return new URLBuilder($this);
 	}
 	
 	/**
