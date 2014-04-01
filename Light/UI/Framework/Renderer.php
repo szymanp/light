@@ -4,10 +4,11 @@ namespace Light\UI\Framework;
 
 use Light\Util\Templating\TemplateEngineRegistry;
 use Light\Util\Templating\TemplateEngine;
+use Light\Util\Templating\DocumentPart;
 
 class Renderer
 {
-	/** @var Light\UI\Framework\Element */
+	/** @var \Light\UI\Framework\Element */
 	private $owner;
 
 	/**
@@ -20,6 +21,11 @@ class Renderer
 	 */
 	private $resourceFileName;
 	
+	/**
+	 * @var \use Light\Util\Templating\DocumentPart
+	 */
+	private $documentPart;
+	
 	public function __construct(Element $owner)
 	{
 		$this->owner = $owner;
@@ -28,7 +34,7 @@ class Renderer
 	/**
 	 * Sets the filename of the template to be rendered.
 	 * @param string	$filename
-	 * @return Light\UI\Framework\Renderer	For fluent API
+	 * @return \Light\UI\Framework\Renderer	For fluent API
 	 */
 	public function setResourceFileName($filename)
 	{
@@ -39,11 +45,22 @@ class Renderer
 	/**
 	 * Sets a template engine to use for rendering this template.
 	 * @param string	$name	A template engine name known by the TemplateEngineRegistry.
-	 * @return Light\UI\Framework\Renderer	For fluent API
+	 * @return \Light\UI\Framework\Renderer	For fluent API
 	 */
 	public function setTemplateEngineName($name)
 	{
 		$this->templateEngineName = $name;
+		return $this;
+	}
+	
+	/**
+	 * Sets the root document part to be used for rendering this template.
+	 * @param DocumentPart $rootDocumentPart
+	 * @return \Light\UI\Framework\Renderer	For fluent API
+	 */
+	public function setRootDocumentPart(DocumentPart $rootDocumentPart)
+	{
+		$this->documentPart = $rootDocumentPart;
 		return $this;
 	}
 
@@ -96,6 +113,10 @@ class Renderer
 			$tpl = TemplateEngineRegistry::getInstance()->get($this->templateEngineName);
 			$tpl->loadTemplateFromFile($file);
 			$tpl->setVariable(TemplateEngine::ROOT_VARIABLE, $this->owner);
+			if ($this->documentPart)
+			{
+				$tpl->setRootDocumentPart($this->documentPart);
+			}
 			$tpl->render(true);
 		}
 	}

@@ -28,7 +28,7 @@ abstract class Renderable extends Container
 
 	/**
 	 * Returns the renderer for this component.
-	 * @return Light\UI\Framework\Renderer
+	 * @return \Light\UI\Framework\Renderer
 	 */
 	public function getRenderer()
 	{
