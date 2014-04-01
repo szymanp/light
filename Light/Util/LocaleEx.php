@@ -3,7 +3,7 @@
  * A <kbd>Locale</kbd> object represents a specific international profile.
  *
  * @package	i18n
- * @author	Piotr Szymañski <szyman@magres.net>
+ * @author	Piotr Szymaï¿½ski <szyman@magres.net>
  * @license	http://www.gnu.org/copyleft/gpl.html  GPL License, Version 2
  *
  */
