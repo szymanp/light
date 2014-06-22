@@ -116,9 +116,16 @@ class Autoloader
 	 * Appends the given path to the PHP include path.
 	 * @param string	$path	Path to be appended to the PHP include path.
 	 */
-	public static function addIncludePath($path)
+	public static function addIncludePath($path, $prepend = false)
 	{
-		set_include_path(get_include_path() . PATH_SEPARATOR . $path);
+		if ($prepend)
+		{
+			set_include_path($path . PATH_SEPARATOR . get_include_path());
+		}
+		else
+		{
+			set_include_path(get_include_path() . PATH_SEPARATOR . $path);
+		}
 	}
 	
 	private static function lcfirst($s)
