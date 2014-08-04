@@ -17,6 +17,6 @@
         "phpunit/phpunit": "*"
     },
     "autoload": {
-        "psr-0": { "Light": "Light/" }
+        "psr-0": { "Light": "" }
     }
 }
