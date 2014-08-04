@@ -24,7 +24,7 @@ class NestedException extends \Exception {
 		if (!empty($userMessage)) $userMessage .= ": ";
 		$userMessage .= $e->getMessage() . "\nStack trace:\n" . $e->getTraceAsString();
 
-        parent::__construct($userMessage);
+        parent::__construct($userMessage, null, $e);
     }
 	
 	/**

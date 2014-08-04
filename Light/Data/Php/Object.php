@@ -194,7 +194,7 @@ class Object implements Data\Object {
 			return $v;
 		}
 		
-		throw new Exception( "Property $localName is not available for reading." );
+		throw new Exception( "Property \"$localName\" is not available for reading." );
 
 	}
 	
@@ -218,7 +218,7 @@ class Object implements Data\Object {
 			return;
 		}
 		
-		throw new Exception( "Property $localName is not available for writing." );
+		throw new Exception( "Property \"$localName\" is not available for writing." );
 	
 	}
 

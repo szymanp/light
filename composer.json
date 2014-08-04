@@ -1,0 +1,22 @@
+{
+    "name": "light/light",
+    "description": "Light PHP library.",
+    "homepage": "https://github.com/szymanp/light",
+    "type": "library",
+    "license": "GPL-3.0+",
+    "authors": [
+        {
+            "name": "Piotr Szymanski",
+            "email": "szyman@magres.net"
+        }
+    ],
+    "require": {
+        "php": ">=5.3.0"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "*"
+    },
+    "autoload": {
+        "psr-0": { "Light": "Light/" }
+    }
+}
